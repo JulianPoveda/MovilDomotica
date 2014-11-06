@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <Switch
+        android:id="@+id/btnLampara"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="67dp"
+        android:text="@string/LblLampara" />
+
+    <Switch
+        android:id="@+id/btnPuerta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnLampara"
+        android:layout_alignRight="@+id/btnLampara"
+        android:layout_below="@+id/btnLampara"
+        android:text="@string/LblPuerta" />
+
+    <Switch
+        android:id="@+id/btnPotencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnPuerta"
+        android:layout_alignRight="@+id/btnPuerta"
+        android:layout_below="@+id/btnPuerta"
+        android:text="@string/LblPotencia" />
+
+    <TextView
+        android:id="@+id/LblBluetooth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/btnPotencia"
+        android:layout_marginTop="40dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/LblBluetooth"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/CmbBluetooth"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/LblBluetooth"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

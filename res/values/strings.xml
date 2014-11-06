@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Domotica</string>
+    <string name="title_activity_form_principal">FormPrincipal</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="LblPuerta">Puerta</string>
+    <string name="LblLampara">Lampara</string>
+    <string name="LblPotencia">Potencia</string>
+    <string name="LblBluetooth">Bluetooth Asociados</string>
+
+</resources>
