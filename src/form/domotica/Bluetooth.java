@@ -1,5 +1,6 @@
 package form.domotica;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Set;
@@ -17,7 +18,7 @@ public class Bluetooth {
 	private String 		mydeviceaddress;
 	private String 		mydevicename;
 	BluetoothAdapter 	bluetooth = BluetoothAdapter.getDefaultAdapter();
-	BluetoothDevice 	mmDevice= null;
+	private BluetoothDevice 	mmDevice= null;
 	BluetoothSocket 	mmSocket;
 	OutputStream 		mmOutputStream;
 	//private UIHelper helper = new UIHelper(this);
@@ -80,56 +81,109 @@ public class Bluetooth {
 	//Funcion para realizar el intento de impresion
 	public void IntentPrint(String Impresora, String txtvalue){
 		try{
-			byte[] buffer = txtvalue.getBytes("UTF-8");
+			byte[] buffer = txtvalue.getBytes();
 			InitPrinter(Impresora);
 			for(int i=0;i<=buffer.length-1;i++){
 				mmOutputStream.write(buffer[i]);
 			}
-			mmOutputStream.close();
-			mmSocket.close();
+			//mmOutputStream.close();
+			//mmSocket.close();
 		}catch(Exception ex){
 		}
 	} 
 	
 	
+	private void setUUID(String _uuid){
+		try {
+			UUID uuid = UUID.fromString(_uuid); 
+			mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+			bluetooth.cancelDiscovery();
+			mmSocket.connect();
+			mmOutputStream = mmSocket.getOutputStream();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private boolean getUUID(){
+		if(mmSocket == null){
+			return false;
+		}else{
+			return mmSocket.isConnected();
+		}
+	}
+	
+	private int getStateBluetooth(){
+		return mmDevice.getBondState();
+	}
+	
+	private void setPairedBluetooth(){
+		//mmDevice.createBond();
+	}
+	
+	private void getAddressBluetoothByName(String _name){
+		Set<BluetoothDevice> pairedDevices = bluetooth.getBondedDevices();
+		if(pairedDevices.size() > 0){
+			for(BluetoothDevice device : pairedDevices){
+				if(device.getName().equals(_name)){ 
+					this.mmDevice = device;
+				  	break;
+				}
+			}
+		}else{
+			this.mmDevice = null;
+			Toast.makeText(this.context, "No se detectaron dispositivos bluetooth sincronizados.", Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	
 	//Funcion para imprimir 
 	private void InitPrinter(String Impresora){
 		try{
-			Set<BluetoothDevice> pairedDevices = bluetooth.getBondedDevices();
-			if(pairedDevices.size() > 0){
-				for(BluetoothDevice device : pairedDevices){
-					//modificar para capturar el nombre de la impresora directamente de la base de datos
-					if(device.getName().equals(Impresora)){ 
-						mmDevice = device;
-    				  	break;
-					}
-				}
-				if(mmDevice!=null){
-					UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Standard SerialPortService ID
-					mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-					bluetooth.cancelDiscovery();
-					if(mmDevice.getBondState()==12){	//Condicion para saber si esta apareada la impresora
-						try{
-							//mmSocket.connect();
-							if(!mmSocket.isConnected()){
-								mmSocket.connect();
-								mmOutputStream = mmSocket.getOutputStream();
-							}else{
-								mmOutputStream = mmSocket.getOutputStream();
-							}
-						}catch(Exception e){
-							Toast.makeText(this.context, "Error al conectarse a la impresora.", Toast.LENGTH_LONG).show();
-						}
-					}else{
-						Toast.makeText(this.context, "No se encontro la impresora no esta sincronizada.", Toast.LENGTH_LONG).show();
-					}
-				}else{
-					Toast.makeText(this.context, "No se encontro la impresora en la lista de dispositivos apareados.", Toast.LENGTH_LONG).show();
+			getAddressBluetoothByName(Impresora);
+			if(mmDevice!=null){
+				
+				//UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Standard SerialPortService ID
+				//mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+				//bluetooth.cancelDiscovery();
+				if(!getUUID()){
+					setUUID("00001101-0000-1000-8000-00805F9B34FB");
 				}
 				
+				switch(getStateBluetooth()){
+					case BluetoothDevice.BOND_NONE:
+						setPairedBluetooth();
+						break;
+						
+					case BluetoothDevice.BOND_BONDING:
+						break;
+						
+					case BluetoothDevice.BOND_BONDED:
+						try{
+							//mmOutputStream = mmSocket.getOutputStream();
+						}catch(Exception e){
+							Toast.makeText(this.context, e.toString(), Toast.LENGTH_LONG).show();
+						}
+						break;
+				}
+				
+				/*if(mmDevice.getBondState()==12){	//Condicion para saber si esta apareada la impresora
+					try{
+						//mmSocket.connect();
+						if(!mmSocket.isConnected()){
+							mmSocket.connect();
+							mmOutputStream = mmSocket.getOutputStream();
+						}
+					}catch(Exception e){
+						Toast.makeText(this.context, e.toString(), Toast.LENGTH_LONG).show();
+					}
+				}else{
+					Toast.makeText(this.context, "No se encontro la impresora no esta sincronizada.", Toast.LENGTH_LONG).show();
+				}*/
 			}else{
-				Toast.makeText(this.context, "No se detectaron dispositivos sincronizados.", Toast.LENGTH_LONG).show();
-			}
+				Toast.makeText(this.context, "No se encontro la impresora en la lista de dispositivos apareados.", Toast.LENGTH_LONG).show();
+			}				
 		}catch(Exception ex){
 			Toast.makeText(this.context, "No se detecto bluetooth en el equipo.", Toast.LENGTH_LONG).show();
 		}

@@ -45,7 +45,7 @@ public class FormPrincipal extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		switch(v.getId()){
 			case R.id.btnLampara:
-				if(this._lampara.isActivated()){
+				if(this._lampara.isChecked()){
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "encender 1\r\n");
 				}else{
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "apagar 1\r\n");
@@ -53,7 +53,7 @@ public class FormPrincipal extends Activity implements OnClickListener{
 				break;
 			
 			case R.id.btnPuerta:
-				if(this._puerta.isActivated()){
+				if(this._puerta.isChecked()){
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "encender 2\r\n");
 				}else{
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "apagar 2\r\n");
@@ -61,7 +61,7 @@ public class FormPrincipal extends Activity implements OnClickListener{
 				break;
 			
 			case R.id.btnPotencia:
-				if(this._potencia.isActivated()){
+				if(this._potencia.isChecked()){
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "encender 3\r\n");
 				}else{
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "apagar 3\r\n");
