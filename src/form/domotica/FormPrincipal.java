@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -47,27 +45,33 @@ public class FormPrincipal extends Activity implements OnClickListener{
 			case R.id.btnLampara:
 				if(this._lampara.isChecked()){
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "encender 1\r\n");
+					new UpdatePage(this, "").execute("Lampara","Encendida");
+					
 				}else{
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "apagar 1\r\n");
+					new UpdatePage(this, "").execute("Lampara","Apagada");
 				}
 				break;
 			
 			case R.id.btnPuerta:
 				if(this._puerta.isChecked()){
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "encender 2\r\n");
+					new UpdatePage(this, "").execute("Puerta","Encendida");
 				}else{
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "apagar 2\r\n");
+					new UpdatePage(this, "").execute("Puerta","Apagada");
 				}
 				break;
 			
 			case R.id.btnPotencia:
 				if(this._potencia.isChecked()){
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "encender 3\r\n");
+					new UpdatePage(this, "").execute("Potencia","Encendida");
 				}else{
 					this.MB.IntentPrint(this._bluetooth.getSelectedItem().toString(), "apagar 3\r\n");
+					new UpdatePage(this, "").execute("Potencia","Apagada");
 				}
 				break;	
 		}
-		
 	}
 }
